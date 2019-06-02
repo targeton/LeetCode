@@ -1,0 +1,7 @@
+# File Ignore
+*.a
+*.exe
+
+# Build results
+[Bb]in/
+[Pb]kg
