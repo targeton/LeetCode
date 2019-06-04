@@ -1,38 +1,71 @@
 package solution
 
+import "math"
+
 func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
-	m, n := len(nums1), len(nums2)
-	i, j, length := 0, 0, 0
-	if (m+n)%2 == 0 {
-		length = (m+n)/2 + 1
-	} else {
-		length = (m+n)/2 + 1
+	if len(nums1) > len(nums2) {
+		temp := nums1
+		nums1 = nums2
+		nums2 = temp
 	}
-	index, temp := 0, make([]int, length)
-	for {
-		if i >= m {
-			temp[index] = nums2[j]
-			j++
-		} else if j >= n {
-			temp[index] = nums1[i]
-			i++
-		} else if nums1[i] < nums2[j] {
-			temp[index] = nums1[i]
-			i++
-		} else {
-			temp[index] = nums2[j]
-			j++
+	m, n := len(nums1), len(nums2)
+	if m == 0 {
+		if n == 0 {
+			return 0.0
+		} else if n%2 == 0 {
+			return (float64(nums2[n/2]) + float64(nums2[n/2-1])) / 2.0
 		}
-		index++
-		if index >= length {
+		return float64(nums2[n/2])
+	}
+	imin, imax := 0, m
+	var i, j int
+	maxL, minR := 0.0, 0.0
+	for {
+		i = (imin + imax) / 2
+		j = (m+n+1)/2 - i
+		if i == 0 {
+			if nums1[i] >= nums2[j-1] {
+				maxL = float64(nums2[j-1])
+				if j < n {
+					minR = math.Min(float64(nums1[i]), float64(nums2[j]))
+				} else {
+					minR = float64(nums1[i])
+				}
+				break
+			} else {
+				imin = i + 1
+				continue
+			}
+		}
+		if i == m {
+			if nums2[j] >= nums1[i-1] {
+				if j-1 >= 0 {
+					maxL = math.Max(float64(nums1[i-1]), float64(nums2[j-1]))
+				} else {
+					maxL = float64(nums1[i-1])
+				}
+				minR = float64(nums2[j])
+				break
+			} else {
+				imax = i - 1
+				continue
+			}
+		}
+		if nums1[i-1] <= nums2[j] && nums2[j-1] <= nums1[i] {
+			maxL = math.Max(float64(nums1[i-1]), float64(nums2[j-1]))
+			minR = math.Min(float64(nums1[i]), float64(nums2[j]))
 			break
 		}
+
+		if nums1[i-1] >= nums2[j] {
+			imax = i - 1
+		}
+		if nums2[j-1] >= nums1[i] {
+			imin = i + 1
+		}
 	}
-	result := 0.0
-	if (m+n)%2 == 0 {
-		result = float64(temp[length-1]+temp[length-2]) / 2.0
-	} else {
-		result = float64(temp[length-1])
+	if (m+n)%2 == 1 {
+		return maxL
 	}
-	return result
+	return (maxL + minR) / 2.0
 }
