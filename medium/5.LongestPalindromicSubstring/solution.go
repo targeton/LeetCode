@@ -1,32 +1,50 @@
 package solution
 
-func longestPalindrome(s string) string {
-	maxLen := 0
-	result := ""
-	for i := range s {
-		// when the length of padindrome substring is odd,s[i] is the center
-		getLongestPalindrome(s, i, i, &maxLen, &result)
-		// when the length of padindrome substring is even,s[i] and s[i+1] is the center
-		getLongestPalindrome(s, i, i+1, &maxLen, &result)
-	}
-	return result
-}
+import "strings"
 
-// get longest palindrome from center to both sides
-func getLongestPalindrome(s string, left int, right int, maxLen *int, result *string) {
-	for {
-		if left < 0 || right >= len(s) {
-			break
-		}
-		if s[left] == s[right] {
-			if right-left+1 > *maxLen {
-				*maxLen = right - left + 1
-				*result = s[left : right+1]
+func longestPalindrome(s string) string {
+	ss := strings.Join(strings.Split(s, ""), "#")
+	ss = "#" + ss + "#"
+	p := make([]int, len(ss))
+	id, mx := 0, 0
+	for i := range ss {
+		if i < mx {
+			if p[2*id-i] < (mx - i) {
+				p[i] = p[2*id-i]
+			} else {
+				p[i] = mx - i
 			}
-			left--
-			right++
 		} else {
-			break
+			p[i] = 1
+		}
+		left, right := i-p[i], i+p[i]
+		for {
+			if left < 0 || right >= len(ss) {
+				break
+			}
+			if ss[left] == ss[right] {
+				p[i]++
+				left--
+				right++
+			} else {
+				break
+			}
+		}
+		if i+p[i] > mx {
+			id = i
+			mx = i + p[i]
 		}
 	}
+	sid, sMax := 0, 0
+	for i := range p {
+		if p[i] > sMax {
+			sid = i
+			sMax = p[i]
+		}
+	}
+	sLen := sMax - 1
+	if sLen%2 == 0 {
+		return s[sid/2-sLen/2 : sid/2+sLen/2]
+	}
+	return s[sid/2-sLen/2 : sid/2+sLen/2+1]
 }
