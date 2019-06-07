@@ -18,6 +18,7 @@ func Test_convert(t *testing.T) {
 		{"test03", args{"PAYPALISHIRING", 5}, "PHASIYIRPLIGAN"},
 		{"test04", args{"ABCD", 2}, "ACBD"},
 		{"test05", args{"ABCD", 1}, "ABCD"},
+		{"test06", args{"ABCD", 10}, "ABCD"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

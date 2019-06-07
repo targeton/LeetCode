@@ -2,21 +2,17 @@ package solution
 
 func convert(s string, numRows int) string {
 	result := ""
-	length := len(s)
-	pos := make([]int, length)
-	if numRows > 1 {
-		for i := range s {
-			q := i % (2 * (numRows - 1))
-			if q > numRows-1 {
-				q = 2*(numRows-1) - q
-			}
-			pos[i] = q
-		}
+	if numRows == 1 {
+		return s
 	}
 	for i := 0; i < numRows; i++ {
-		for j := range s {
-			if i == pos[j] {
-				result += string(s[j])
+		for j, v := range s {
+			k := j % (2 * (numRows - 1))
+			if k > numRows-1 {
+				k = 2*(numRows-1) - k
+			}
+			if i == k {
+				result += string(v)
 			}
 		}
 	}
