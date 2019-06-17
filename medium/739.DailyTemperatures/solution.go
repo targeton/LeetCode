@@ -3,16 +3,18 @@ package solution
 func dailyTemperatures(T []int) []int {
 	length := len(T)
 	result := make([]int, length)
-	stack := make([]int, length)
-	top := -1
-	for i := 0; i < length; i++ {
-		for top > -1 && T[i] > T[stack[top]] {
-			idx := stack[top]
-			result[idx] = i - idx
-			top--
+	for i := length - 2; i >= 0; i-- {
+		k := i + 1
+		for k < length {
+			if T[i] < T[k] {
+				result[i] = k - i
+				break
+			} else if result[k] == 0 {
+				break
+			} else {
+				k = k + result[k]
+			}
 		}
-		top++
-		stack[top] = i
 	}
 	return result
 }
