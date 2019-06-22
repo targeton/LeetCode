@@ -19,7 +19,7 @@ func findTargetSumWays(nums []int, S int) int {
 	if (sum+S)%2 > 0 {
 		return 0
 	}
-	return subSetSum(nums, S)
+	return subSetSum(nums, (sum+S)/2)
 }
 
 func subSetSum(nums []int, S int) int {
