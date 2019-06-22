@@ -7,31 +7,23 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-var array []int
-
 func isValidBST(root *TreeNode) bool {
-	array = make([]int, 0)
-	return isValid(root)
+	before := ^int(^uint(0) >> 1)
+	return isValid(root, &before)
 }
 
-func isValid(root *TreeNode) bool {
+func isValid(root *TreeNode, before *int) bool {
 	if root == nil {
 		return true
 	}
 	res := true
-	res = res && isValid(root.Left)
-	if len(array) == 0 {
+	res = res && isValid(root.Left, before)
+	if *before < root.Val {
+		*before = root.Val
 		res = res && true
-		array = append(array, root.Val)
 	} else {
-		before := array[len(array)-1]
-		if before < root.Val {
-			res = res && true
-			array = append(array, root.Val)
-		} else {
-			return false
-		}
+		return false
 	}
-	res = res && isValid(root.Right)
+	res = res && isValid(root.Right, before)
 	return res
 }
