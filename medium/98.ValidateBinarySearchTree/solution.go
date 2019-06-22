@@ -7,23 +7,29 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
+var intMax, intMin int
+
 func isValidBST(root *TreeNode) bool {
-	before := ^int(^uint(0) >> 1)
-	return isValid(root, &before)
+	intMax = int(^uint(0) >> 1)
+	intMin = ^int(^uint(0) >> 1)
+	return isValid(root, intMin, intMax)
 }
 
-func isValid(root *TreeNode, before *int) bool {
-	if root == nil {
+func isValid(node *TreeNode, lower int, upper int) bool {
+	if node == nil {
 		return true
 	}
-	res := true
-	res = res && isValid(root.Left, before)
-	if *before < root.Val {
-		*before = root.Val
-		res = res && true
-	} else {
+	if lower != intMin && node.Val < lower {
 		return false
 	}
-	res = res && isValid(root.Right, before)
-	return res
+	if upper != intMax && node.Val > upper {
+		return false
+	}
+	if !isValid(node.Left, lower, node.Val) {
+		return false
+	}
+	if !isValid(node.Right, node.Val, upper) {
+		return false
+	}
+	return true
 }
