@@ -1,19 +1,31 @@
 package solution
 
 func searchMatrix(matrix [][]int, target int) bool {
-	if matrix == nil || len(matrix) < 1 || len(matrix[0]) < 1 {
+	if matrix == nil || len(matrix) < 1 {
 		return false
 	}
-	// set the first position at top-right, if the target is greater than value then row++, if the target is less than value then col--
-	row, col := 0, len(matrix[0])-1
-	for col >= 0 && row < len(matrix) {
-		if matrix[row][col] == target {
+	i, j, p, q := 0, 0, len(matrix)-1, len(matrix[0])-1
+	return search(matrix, target, i, j, p, q)
+}
+
+func search(matrix [][]int, target int, i int, j int, p int, q int) bool {
+	if i > p || j > q {
+		return false
+	}
+	if i == p && j == q {
+		return matrix[i][j] == target
+	}
+	mid := (j + q) / 2
+	var k int
+	for k = i; k <= p; k++ {
+		if matrix[k][mid] == target {
 			return true
-		} else if matrix[row][col] > target {
-			col--
-		} else {
-			row++
+		}
+		if matrix[k][mid] > target {
+			break
 		}
 	}
-	return false
+	ri, rj, rp, rq := i, mid+1, k-1, q
+	li, lj, lp, lq := k, j, p, mid-1
+	return search(matrix, target, ri, rj, rp, rq) || search(matrix, target, li, lj, lp, lq)
 }

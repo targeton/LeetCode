@@ -20,3 +20,7 @@ Consider the following matrix:
 Given target = 5, return true.
 
 Given target = 20, return false.
+
+## Tip
+We can use divide-and-conquer algorithm to solve the problem. Illustrate the strategy in the following picture.
+![divide-and-conquer illustration](./search_2d_matrix.png)
