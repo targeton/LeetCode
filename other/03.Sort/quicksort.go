@@ -3,8 +3,8 @@ package sort
 func sort(n []int) []int {
 	//quicksort
 	// quicksort1(n, 0, len(n)-1)
-	// quicksort2(n, 0, len(n)-1)
-	quicksort3(n)
+	quicksort2(n, 0, len(n)-1)
+	// quicksort3(n)
 	return n
 }
 
@@ -40,18 +40,15 @@ func quicksort2(n []int, left int, right int) {
 	if left >= right {
 		return
 	}
-	divider := left
-	p := right
-	for i := left + 1; i <= p; {
-		if n[i] >= n[divider] {
-			n[i], n[p] = n[p], n[i]
-			p--
-		} else {
+	divider := right
+	pivot := n[left]
+	for i := right; i > left; i-- {
+		if n[i] > pivot {
 			n[i], n[divider] = n[divider], n[i]
-			i++
-			divider++
+			divider--
 		}
 	}
+	n[divider], n[left] = n[left], n[divider]
 	quicksort2(n, left, divider-1)
 	quicksort2(n, divider+1, right)
 }
