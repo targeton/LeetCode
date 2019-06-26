@@ -5,22 +5,34 @@ var positions [][]int
 func totalNQueens(n int) int {
 	positions = [][]int{}
 	count := 0
-	backtrack(0, n, &count)
-	return count
-}
-
-func backtrack(row int, n int, count *int) {
-	for col := 0; col < n; col++ {
-		if isNotUnderAttack(row, col) {
-			placeQueen(row, col)
-			if row+1 == n {
-				*count++
-			} else {
-				backtrack(row+1, n, count)
+	row, col := 0, 0
+	for row < n {
+		old, find := len(positions), false
+		for c := col; c < n; c++ {
+			if isNotUnderAttack(row, c) {
+				positions = append(positions, []int{row, c})
+				if row+1 == n {
+					count++
+					find = true
+				} else {
+					row++
+					break
+				}
 			}
-			removeQueen(row, col)
+		}
+		if len(positions) < 1 {
+			break
+		}
+		if len(positions) == old || find {
+			last := positions[len(positions)-1]
+			row = last[0]
+			col = last[1] + 1
+			positions = positions[:len(positions)-1]
+		} else {
+			col = 0
 		}
 	}
+	return count
 }
 
 func isNotUnderAttack(row, col int) bool {
@@ -33,12 +45,4 @@ func isNotUnderAttack(row, col int) bool {
 		}
 	}
 	return true
-}
-
-func placeQueen(row, col int) {
-	positions = append(positions, []int{row, col})
-}
-
-func removeQueen(row, col int) {
-	positions = positions[0 : len(positions)-1]
 }
