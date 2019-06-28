@@ -2,7 +2,6 @@ package solution
 
 func solveSudoku(board [][]byte) {
 	var pos [][]int
-	var res [][]byte
 	for i := 0; i < len(board); i++ {
 		for j := 0; j < len(board[i]); j++ {
 			if board[i][j] == '.' {
@@ -11,29 +10,24 @@ func solveSudoku(board [][]byte) {
 		}
 	}
 	step, n := 0, len(pos)
-	backtrack(&res, board, pos, step, n)
-	copy(board, res)
+	backtrack(board, pos, step, n)
 }
 
-func backtrack(res *[][]byte, board [][]byte, pos [][]int, step int, n int) {
+func backtrack(board [][]byte, pos [][]int, step int, n int) bool {
 	if step == n {
-		for _, v := range board {
-			var tmp []byte
-			for _, b := range v {
-				tmp = append(tmp, b)
-			}
-			*res = append(*res, tmp)
-		}
-		return
+		return true
 	}
 	row, col := pos[step][0], pos[step][1]
 	for v := byte('1'); v <= byte('9'); v++ {
 		if isValid(board, row, col, v) {
 			board[row][col] = v
-			backtrack(res, board, pos, step+1, n)
+			if backtrack(board, pos, step+1, n) {
+				return true
+			}
 			board[row][col] = '.'
 		}
 	}
+	return false
 }
 
 func isValid(board [][]byte, row int, col int, value byte) bool {
