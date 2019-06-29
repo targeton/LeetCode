@@ -1,21 +1,21 @@
 package solution
 
-func combine(n int, k int) [][]int {
-	var res [][]int
-	var tmp []int
-	backtrack(&res, tmp, 0, k, n)
-	return res
-}
+import "math/bits"
 
-func backtrack(res *[][]int, tmp []int, i int, k int, n int) {
-	if len(tmp) == k {
-		t := make([]int, k)
-		copy(t, tmp)
-		*res = append(*res, t)
+func combine(n int, k int) [][]int {
+	ret := make([][]int, 0)
+	// 1 << uint(n) 表示二进制后n位为组合置位区间
+	for i := 0; i < (1 << uint(n)); i++ {
+		// 用bit位置位来表示组合，例如 3 二进制 0000 0101, 即有两位置1, 循环出哪两位置位，即得到这次组合是{2,4}
+		if bits.OnesCount32(uint32(i)) == k {
+			var cur []int
+			for j := 0; j < n; j++ {
+				if i&(1<<uint(j)) != 0 {
+					cur = append(cur, j+1)
+				}
+			}
+			ret = append(ret, cur)
+		}
 	}
-	for v := i + 1; v <= n && k-len(tmp) <= n-v+1; v++ {
-		tmp = append(tmp, v)
-		backtrack(res, tmp, v, k, n)
-		tmp = tmp[:len(tmp)-1]
-	}
+	return ret
 }
