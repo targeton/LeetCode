@@ -9,10 +9,7 @@ func getNextArray(pattern string) []int {
 	result := make([]int, len(pattern))
 	result[0] = -1
 	k, j := -1, 0
-	for {
-		if j >= len(pattern)-1 {
-			break
-		}
+	for j < len(pattern)-1 {
 		if k == -1 || pattern[j] == pattern[k] {
 			j++
 			k++
@@ -32,10 +29,7 @@ func getNextArray(pattern string) []int {
 func findPosition(m string, s string) int {
 	i, j, pos := 0, 0, -1
 	next := getNextArray(s)
-	for {
-		if i >= len(m) || j >= len(s) {
-			break
-		}
+	for i < len(m) && j < len(s) {
 		if j == -1 || m[i] == s[j] {
 			i++
 			j++
