@@ -7,18 +7,22 @@ type ListNode struct {
 }
 
 func reverseKGroup(head *ListNode, k int) *ListNode {
-	cur, count := head, 0
-	for cur != nil && count < k {
-		cur = cur.Next
-		count++
-	}
-	if count == k {
-		curr := reverseKGroup(cur, k)
-		for count > 0 {
-			head.Next, curr, head = curr, head, head.Next // 不是依此赋值，是一起赋值（注：分开赋值需要tmp变量临时保存head.Next）
-			count--
+	dummy := &ListNode{Val: 0, Next: head}
+	jump := dummy
+	l, r := head, head
+	for r != nil {
+		count := 0
+		for r != nil && count < k {
+			r = r.Next
+			count++
 		}
-		head = curr
+		if count == k {
+			prev, cur := r, l
+			for i := 0; i < k; i++ {
+				prev, cur, cur.Next = cur, cur.Next, prev
+			}
+			jump.Next, jump, l = prev, l, r
+		}
 	}
-	return head
+	return dummy.Next
 }
